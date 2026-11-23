@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexFit Vision - Boxe, Fitness & Sport Ludique IA</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { 900: '#070b13', 800: '#0f172a', 700: '#1e293b' },
+                        neon: { cyan: '#00f2fe', red: '#ff0844', green: '#10b981', amber: '#f59e0b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-dark-900 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
+
+    <!-- Top Navigation Bar -->
+    <header class="glass-panel sticky top-0 z-50 border-b border-slate-800 px-4 lg:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" data-nav="dashboard">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-cyan-500/30">
+                    A
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider uppercase font-teko text-white flex items-center gap-2">
+                        <span class="text-neon-cyan">Aji</span>Fit
+                        <span class="text-[10px] font-sans font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full">MULTI-SPORT IA</span>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold">
+                <button data-nav="dashboard" class="px-3 py-1.5 rounded-xl transition hover:text-white text-cyan-400 bg-slate-800/80">
+                    🏠 Accueil
+                </button>
+                <button data-nav="boxing-duel" class="px-3 py-1.5 rounded-xl transition hover:text-white text-red-400 hover:bg-slate-800/40 flex items-center gap-1">
+                    🥊 Combat 3D VR
+                </button>
+                <button data-nav="boxing-coach" class="px-3 py-1.5 rounded-xl transition hover:text-white text-slate-300 hover:bg-slate-800/40 flex items-center gap-1">
+                    🎯 Coach Mitaines
+                </button>
+                <button data-nav="pushups" class="px-3 py-1.5 rounded-xl transition hover:text-white text-slate-300 hover:bg-slate-800/40 flex items-center gap-1">
+                    🏋️ Pompes Pro
+                </button>
+                <button data-nav="squats" class="px-3 py-1.5 rounded-xl transition hover:text-white text-emerald-400 hover:bg-slate-800/40 flex items-center gap-1">
+                    🦵 Squats IA
+                </button>
+                <button data-nav="flappy" class="px-3 py-1.5 rounded-xl transition hover:text-white text-amber-400 hover:bg-slate-800/40 flex items-center gap-1">
+                    🐥 Flappy Pompes
+                </button>
+                <button data-nav="ninja" class="px-3 py-1.5 rounded-xl transition hover:text-white text-purple-400 hover:bg-slate-800/40 flex items-center gap-1">
+                    🍉 Ninja Strike
+                </button>
+                <button data-nav="shop" class="px-3 py-1.5 rounded-xl transition hover:text-white text-indigo-400 hover:bg-slate-800/40 flex items-center gap-1">
+                    🛍️ Boutique
+                </button>
+            </nav>
+
+            <!-- Audio, Coach & Cart controls -->
+            <div class="flex items-center gap-3">
+                <button class="open-cart-btn relative px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700/60 text-xs font-bold text-slate-200 flex items-center gap-1.5 transition">
+                    <span>🛒 Panier</span>
+                    <span class="cart-count-badge hidden px-1.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500 text-black leading-none">0</span>
+                </button>
+                <label class="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-pointer select-none">
+                    <input type="checkbox" id="sound-toggle" checked class="w-4 h-4 rounded accent-cyan-500 cursor-pointer">
+                    <span>Sons</span>
+                </label>
+                <label class="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-pointer select-none">
+                    <input type="checkbox" id="voice-toggle" checked class="w-4 h-4 rounded accent-cyan-500 cursor-pointer">
+                    <span>Coach</span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 flex flex-col justify-center">
+
+        <!-- ============================================== -->
+        <!-- VIEW 1: DASHBOARD (ACCUEIL & RECORDS)           -->
+        <!-- ============================================== -->
+        <section id="dashboard-view" class="view-section space-y-8">
+            
+            <!-- Welcome Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl lg:text-4xl font-black text-white tracking-tight">Entraînement & Fitness Gamifié par IA</h2>
+                    <p class="text-slate-400 mt-1 text-sm lg:text-base">Sans capteur, 100% avec votre caméra : Boxe 3D, Sport général et Mini-jeux d'arcade interactifs.</p>
+                </div>
+                <button id="reset-records-btn" class="text-xs text-slate-500 hover:text-slate-300 underline transition self-start md:self-auto">
+                    Réinitialiser les statistiques
+                </button>
+            </div>
+
+            <!-- Records & Highlights Grid (6 metrics) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <!-- Record Boxe Coups -->
+                <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden border-glow-red">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-red-400 block mb-1">Record Boxe</span>
+                    <div class="flex items-baseline gap-1">
+                        <span id="dash-record-boxing" class="text-3xl font-black text-white font-teko">0</span>
+                        <span class="text-[10px] text-slate-400">coups</span>
+                    </div>
+                    <span class="text-[10px] text-amber-400 block mt-0.5">Combo : <span id="dash-record-combo">x0</span></span>
+                </div>
+
+                <!-- Record Musculation Pompes -->
+                <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden border-glow-cyan">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 block mb-1">Record Pompes</span>
+                    <div class="flex items-baseline gap-1">
+                        <span id="dash-record-pushups" class="text-3xl font-black text-white font-teko">0</span>
+                        <span class="text-[10px] text-slate-400">validées</span>
+                    </div>
+                    <span class="text-[10px] text-emerald-400 block mt-0.5">Angle 90°</span>
+                </div>
+
+                <!-- Record Squats -->
+                <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block mb-1">Record Squats</span>
+                    <div class="flex items-baseline gap-1">
+                        <span id="dash-record-squats" class="text-3xl font-black text-white font-teko">0</span>
+                        <span class="text-[10px] text-slate-400">squats</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block mt-0.5">Flexion complète</span>
+                </div>
+
+                <!-- Record Flappy Pompes -->
+                <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block mb-1">Flappy Pompes</span>
+                    <div class="flex items-baseline gap-1">
+                        <span id="dash-record-flappy" class="text-3xl font-black text-white font-teko">0 pts</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block mt-0.5">Mini-Jeu Arcade</span>
+                </div>
+
+                <!-- Record Ninja Strike -->
+                <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400 block mb-1">Ninja Strike</span>
+                    <div class="flex items-baseline gap-1">
+                        <span id="dash-record-ninja" class="text-3xl font-black text-white font-teko">0 pts</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block mt-0.5">Tranchage mains</span>
+                </div>
+
+                <!-- Total Workouts -->
+                <div class="glass-card p-3.5 rounded-2xl">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Séances Totales</span>
+                    <div class="flex items-baseline gap-1">
+                        <span id="dash-total-workouts" class="text-3xl font-black text-white font-teko">0</span>
+                        <span class="text-[10px] text-slate-400">séances</span>
+                    </div>
+                    <span id="dash-total-calories" class="text-[10px] text-amber-400 font-bold block mt-0.5">0 kcal</span>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- SECTION SUIVI & COURBE DE PERTE DE POIDS       -->
+            <!-- ============================================== -->
+            <div class="glass-panel p-6 rounded-3xl border border-cyan-500/30 relative overflow-hidden space-y-5 bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/80 shadow-2xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                                Objectif Minceur & Santé
+                            </span>
+                            <span id="weight-metric-bmi" class="text-xs font-bold text-slate-300 bg-slate-800/80 px-2.5 py-0.5 rounded-full border border-slate-700">
+                                IMC : 25.2
+                            </span>
+                        </div>
+                        <h3 class="text-2xl font-black text-white flex items-center gap-2">
+                            <span>📉 Courbe d'Évolution & Perte de Poids</span>
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Suivez l'évolution de vos pesées avec tracé de l'objectif et estimation automatique de l'IMC.</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button id="open-weight-modal-btn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-cyan-500/25 transition flex items-center gap-1.5 active:scale-95">
+                            <span>⚖️ + Enregistrer une pesée</span>
+                        </button>
+                        <button id="reset-weight-data-btn" title="Réinitialiser l'historique de poids" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 text-slate-400 hover:text-slate-200 text-xs transition">
+                            🔄
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Weight KPI Summary Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Poids Actuel</span>
+                        <span id="weight-metric-current" class="text-3xl font-black text-white font-teko">79.9 kg</span>
+                        <span class="text-[10px] text-slate-500 block">Dernière pesée</span>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 shadow-sm">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Poids Départ</span>
+                        <span id="weight-metric-initial" class="text-3xl font-black text-slate-300 font-teko">83.8 kg</span>
+                        <span class="text-[10px] text-slate-500 block">Point de départ</span>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-cyan-500/20 shadow-sm">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 block mb-0.5">Objectif Cible</span>
+                        <span id="weight-metric-goal" class="text-3xl font-black text-cyan-400 font-teko">75.0 kg</span>
+                        <span id="weight-metric-togoal" class="text-[10px] text-cyan-300 block font-medium">4.9 kg restant</span>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-emerald-500/20 shadow-sm">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block mb-0.5">Évolution Totale</span>
+                        <span id="weight-metric-diff" class="text-3xl font-black text-emerald-400 font-teko">-3.9 kg</span>
+                        <span class="text-[10px] text-emerald-400/90 block font-medium">Perte accomplie 🔥</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="bg-slate-900/70 p-3.5 rounded-2xl border border-slate-800/80">
+                    <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+                        <span class="text-slate-300 flex items-center gap-1.5">
+                            <span>🎯 Progression vers l'objectif minceur</span>
+                        </span>
+                        <span id="weight-progress-text" class="text-cyan-400 font-mono text-[11px]">44% accompli</span>
+                    </div>
+                    <div class="w-full bg-slate-800/90 h-3 rounded-full overflow-hidden p-0.5">
+                        <div id="weight-progress-bar" class="h-full bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 rounded-full transition-all duration-500" style="width: 44%;"></div>
+                    </div>
+                </div>
+
+                <!-- Interactive Chart Canvas -->
+                <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800/90 relative min-h-[260px] flex items-center justify-center">
+                    <canvas id="weight-chart-canvas" class="w-full max-h-[260px]"></canvas>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- SECTION 1: 🥊 BOXE & COMBAT                   -->
+            <!-- ============================================== -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+                    <span class="text-xl">🥊</span>
+                    <h3 class="text-lg font-black uppercase tracking-wider text-red-400">Boxe & Combat Réactif</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Combat 3D Ring Duel (Manny Style) -->
+                    <div class="glass-panel p-5 rounded-2xl border border-red-500/20 hover:border-red-500/50 transition">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-500/20 text-red-400 border border-red-500/30">
+                                3D VR Vue 1ère Personne
+                            </span>
+                            <span class="text-xs text-slate-400">Gants Rouges & Ring Réaliste</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-1.5">Combat 3D VR (Boss Adversaire)</h4>
+                        <p class="text-slate-400 text-xs mb-4">
+                            Ring 3D immersif : vos gants rouges au premier plan suivent vos mains. L'adversaire au casque bleu vous attaque, esquivez et contre-attaquez pour le K.O. !
+                        </p>
+                        <button id="start-boxing-duel-btn" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-500 hover:to-rose-400 text-white font-bold text-xs tracking-wide shadow-lg shadow-red-600/30 transition flex items-center justify-center gap-2">
+                            <span>🥊 Entrer sur le Ring 3D</span>
+                        </button>
+                    </div>
+
+                    <!-- Coach Pattes d'Ours -->
+                    <div class="glass-panel p-5 rounded-2xl border border-cyan-500/20 hover:border-cyan-500/50 transition">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                                Entraînement Guidé
+                            </span>
+                            <span class="text-xs text-slate-400">Le Coach dicte chaque frappe</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-1.5">Coach Boxe (Pattes d'Ours & Combos)</h4>
+                        <p class="text-slate-400 text-xs mb-4">
+                            Le coach vocal vous ordonne les combinaisons en direct : <strong>"JAB !", "CROSS !", "CROCHET GAUCHE !", "ESQUIVE !"</strong> avec cibles lumineuses à toucher.
+                        </p>
+                        <button id="start-boxing-coach-btn" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-cyan-500/30 transition flex items-center justify-center gap-2">
+                            <span>🎯 Lancer la leçon guidée</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- SECTION 2: 🏋️ SPORT GÉNÉRAL & MUSCULATION      -->
+            <!-- ============================================== -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+                    <span class="text-xl">🏋️</span>
+                    <h3 class="text-lg font-black uppercase tracking-wider text-emerald-400">Sport Général & Musculation</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Pompes Pro Tracker -->
+                    <div class="glass-panel p-5 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/50 transition">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                Musculation Bras & Torse
+                            </span>
+                            <span class="text-xs text-slate-400">Validation stricte 90°</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-1.5">Compteur de Pompes IA Pro</h4>
+                        <p class="text-slate-400 text-xs mb-4">
+                            L'IA analyse l'angle de vos coudes, le gainage du dos et la cadence. Les répétitions ne sont comptées que si la descente est complète !
+                        </p>
+                        <button id="start-pushups-btn" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs tracking-wide shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+                            <span>🏋️ Démarrer la série de pompes</span>
+                        </button>
+                    </div>
+
+                    <!-- Squats Tracker IA -->
+                    <div class="glass-panel p-5 rounded-2xl border border-teal-500/20 hover:border-teal-500/50 transition">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                                Renforcement Jambes & Fessiers
+                            </span>
+                            <span class="text-xs text-slate-400">Angle de flexion des genoux</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-1.5">Squats Tracker IA (Jambes)</h4>
+                        <p class="text-slate-400 text-xs mb-4">
+                            Suivi biomécanique des hanches, genoux et chevilles. Valide chaque squat lorsque les cuisses sont parallèles au sol avec retour vocal.
+                        </p>
+                        <button id="start-squats-btn" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-teal-500/30 transition flex items-center justify-center gap-2">
+                            <span>🦵 Lancer la session de squats</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- SECTION 3: 🎮 FITNESS LUDIQUE & ARCADE        -->
+            <!-- ============================================== -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+                    <span class="text-xl">🎮</span>
+                    <h3 class="text-lg font-black uppercase tracking-wider text-amber-400">Fitness Ludique & Gamification</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Flappy Pompes -->
+                    <div class="glass-panel p-5 rounded-2xl border border-amber-500/20 hover:border-amber-500/50 transition">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                Style Flappy Bird
+                            </span>
+                            <span class="text-xs text-slate-400">1 Pompe = 1 Battement d'ailes</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-1.5">🐥 Flappy Pompes Arcade</h4>
+                        <p class="text-slate-400 text-xs mb-4">
+                            Faites des pompes pour faire voler l'oiseau à travers les tuyaux, évitez le sol et ramassez les haltères dorés pour un maximum de points !
+                        </p>
+                        <button id="start-flappy-btn" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold text-xs tracking-wide shadow-lg shadow-amber-500/30 transition flex items-center justify-center gap-2">
+                            <span>🎮 Jouer à Flappy Pompes</span>
+                        </button>
+                    </div>
+
+                    <!-- Ninja Strike Vision -->
+                    <div class="glass-panel p-5 rounded-2xl border border-purple-500/20 hover:border-purple-500/50 transition">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                Style Fruit Ninja
+                            </span>
+                            <span class="text-xs text-slate-400">Tranchez les cibles avec vos mains</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-1.5">🍉 Ninja Strike (Slash Vision)</h4>
+                        <p class="text-slate-400 text-xs mb-4">
+                            Cardio & réflexes intenses : des cibles volent à l'écran, tranchez-les en bougeant rapidement vos mains dans les airs. Évitez les bombes explosives !
+                        </p>
+                        <button id="start-ninja-btn" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-bold text-xs tracking-wide shadow-lg shadow-purple-600/30 transition flex items-center justify-center gap-2">
+                            <span>⚔️ Démarrer Ninja Strike</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- BANNER BOUTIQUE ACCÈS DIRECT                   -->
+            <!-- ============================================== -->
+            <div class="glass-panel p-5 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/20">
+                        🛍️
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-white">Boutique Officielle Équipements & Nutrition</h4>
+                        <p class="text-xs text-slate-400">Gants de boxe pro, protège-dents, poignées de pompes, élastiques, whey protéine & pistolet de massage.</p>
+                    </div>
+                </div>
+                <button data-nav="shop" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-indigo-500/25 transition whitespace-nowrap self-start sm:self-auto flex items-center gap-1.5 active:scale-95">
+                    <span>Voir la Boutique</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+            <!-- Activity Summary (Résumé de l'activité) -->
+            <div class="space-y-4 pt-2">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span>📊 Historique des séances</span>
+                    </h3>
+                    <span class="text-xs text-slate-400">Sauvegardé localement</span>
+                </div>
+                
+                <div id="recent-activity-list" class="space-y-3"></div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 2: BOXING COACH (2D MITAINES)             -->
+        <!-- ============================================== -->
+        <section id="boxing-view" class="view-section hidden space-y-4">
+            <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button data-nav="dashboard" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition flex items-center gap-1.5">
+                        ← Menu
+                    </button>
+                    <span id="boxing-mode-title" class="text-sm font-bold text-white hidden sm:inline">🥊 Leçon Coach Pattes d'Ours</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="boxing-camera-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                        🟡 Connexion caméra...
+                    </span>
+                    <button id="stop-boxing-btn" class="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white shadow transition">
+                        Fin de séance
+                    </button>
+                </div>
+            </div>
+
+            <div class="camera-container aspect-[16/9] max-h-[72vh] relative">
+                <video id="boxing-video" autoplay playsinline muted></video>
+                <canvas id="boxing-canvas" class="cursor-crosshair"></canvas>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- VIEW 3: 3D VR BOXING RING (MANNY BOXING STYLE POV)       -->
+        <!-- ======================================================== -->
+        <section id="boxing-vr-view" class="view-section hidden space-y-4">
+            <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button data-nav="dashboard" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition flex items-center gap-1.5">
+                        ← Menu
+                    </button>
+                    <span class="text-sm font-bold text-white hidden sm:inline">🥊 Combat 3D VR : Vue Première Personne</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="vr-camera-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                        🟡 Connexion caméra...
+                    </span>
+                    <button id="stop-vr-btn" class="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white shadow transition">
+                        Fin du combat
+                    </button>
+                </div>
+            </div>
+
+            <div id="boxing-vr-container" class="camera-container aspect-[16/9] max-h-[72vh] relative overflow-hidden select-none">
+                <div id="vr-damage-flash" class="absolute inset-0 bg-red-600/40 pointer-events-none transition-opacity duration-150 opacity-0 z-30"></div>
+                <div id="vr-dodge-alert" class="absolute top-16 left-1/2 transform -translate-x-1/2 z-30 px-6 py-2.5 rounded-2xl bg-red-600 text-white font-black text-xl tracking-wider shadow-2xl border-2 border-white animate-bounce hidden">
+                    ⚠️ ESQUIVEZ !
+                </div>
+
+                <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-20 pointer-events-none">
+                    <div class="bg-slate-950/85 px-4 py-2 rounded-xl border border-blue-500/50 backdrop-blur w-56 sm:w-64">
+                        <div class="flex items-center justify-between text-xs font-bold mb-1">
+                            <span class="text-blue-400">ADVERSAIRE 3D</span>
+                            <span class="text-white text-[10px]">BLEU</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                            <div id="vr-opp-hp" class="bg-blue-500 h-full w-full transition-all duration-200"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950/85 px-4 py-1 rounded-xl border border-slate-700 text-center">
+                        <span id="vr-round-label" class="text-[9px] text-slate-400 font-bold block uppercase">Round 1 / 3</span>
+                        <span id="vr-timer" class="text-xl font-black text-amber-400 font-mono">3:00</span>
+                    </div>
+
+                    <div class="bg-slate-950/85 px-4 py-2 rounded-xl border border-red-500/50 backdrop-blur w-56 sm:w-64 text-right">
+                        <div class="flex items-center justify-between text-xs font-bold mb-1">
+                            <span class="text-slate-300 font-mono text-[11px]">COUPS : <span id="vr-punches-count" class="text-neon-cyan font-bold">0</span></span>
+                            <span class="text-red-400">VOTRE VIE</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                            <div id="vr-player-hp" class="bg-red-500 h-full w-full transition-all duration-200"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recovery Break Overlay (Entre les rounds de 3 minutes) -->
+                <div id="vr-recovery-overlay" class="absolute inset-0 bg-slate-950/92 backdrop-blur-md flex flex-col items-center justify-center z-40 hidden p-6 text-center select-none">
+                    <span class="px-4 py-1 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-black uppercase mb-2">
+                        Fin du Round • Pause au Coin
+                    </span>
+                    <h3 class="text-3xl font-black text-white mb-1">RÉCUPÉRATION & SOUFFLE</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm mb-4">Reprenez votre souffle et buvez de l'eau. Prochain round dans :</p>
+                    
+                    <div class="w-20 h-20 rounded-full bg-slate-900 border-4 border-cyan-400 flex items-center justify-center mb-5 shadow-xl shadow-cyan-500/20">
+                        <span id="vr-rest-timer" class="text-2xl font-black text-white font-mono">60s</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 max-w-sm w-full mb-5 text-center">
+                        <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-400 font-bold block">Coups ce round</span>
+                            <span id="vr-round-punches" class="text-lg font-black text-white">0</span>
+                        </div>
+                        <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-400 font-bold block">Esquives</span>
+                            <span id="vr-round-dodges" class="text-lg font-black text-emerald-400">0</span>
+                        </div>
+                        <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-400 font-bold block">Santé régénérée</span>
+                            <span class="text-lg font-black text-cyan-400">+30 HP</span>
+                        </div>
+                    </div>
+
+                    <button id="vr-skip-rest-btn" class="px-7 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-500 hover:to-rose-400 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-red-600/30 transition">
+                        🥊 Prêt ! Passer la pause
+                    </button>
+                </div>
+
+                <div class="absolute bottom-4 left-4 w-36 aspect-[4/3] rounded-xl overflow-hidden border-2 border-red-500/60 shadow-2xl z-20 bg-black/70 pointer-events-none">
+                    <video id="vr-video" class="w-full h-full object-cover transform scale-x-[-1]" autoplay playsinline muted></video>
+                    <div class="absolute bottom-1 left-2 text-[9px] text-white font-bold bg-black/60 px-1 rounded">
+                        📷 Vue Caméra
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 4: PUSHUPS PRO TRACKER                    -->
+        <!-- ============================================== -->
+        <section id="pushups-view" class="view-section hidden space-y-4">
+            <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button data-nav="dashboard" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition flex items-center gap-1.5">
+                        ← Menu
+                    </button>
+                    <span class="text-sm font-bold text-white hidden sm:inline">🏋️ Tracker de Pompes Pro</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="window.pushupTracker.simulateRep()" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700">
+                        +1 Test (Espace)
+                    </button>
+                    <span id="pushups-camera-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                        🟡 Connexion caméra...
+                    </span>
+                    <button id="finish-pushups-btn" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow transition">
+                        Terminer la série
+                    </button>
+                </div>
+            </div>
+
+            <div class="camera-container aspect-[16/9] max-h-[72vh] relative">
+                <video id="pushups-video" autoplay playsinline muted></video>
+                <canvas id="pushups-canvas" class="cursor-pointer"></canvas>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 5: SQUATS TRACKER IA (SPORT GÉNÉRAL)      -->
+        <!-- ============================================== -->
+        <section id="squats-view" class="view-section hidden space-y-4">
+            <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button data-nav="dashboard" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition flex items-center gap-1.5">
+                        ← Menu
+                    </button>
+                    <span class="text-sm font-bold text-white hidden sm:inline">🦵 Squats Tracker IA (Jambes)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="window.squatTracker.simulateRep()" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-emerald-300 border border-slate-700">
+                        +1 Squat (Espace)
+                    </button>
+                    <span id="squats-camera-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                        🟡 Connexion caméra...
+                    </span>
+                    <button id="finish-squats-btn" class="px-4 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-xs font-bold text-white shadow transition">
+                        Terminer
+                    </button>
+                </div>
+            </div>
+
+            <div class="camera-container aspect-[16/9] max-h-[72vh] relative">
+                <video id="squats-video" autoplay playsinline muted></video>
+                <canvas id="squats-canvas" class="cursor-pointer"></canvas>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 6: FLAPPY PUSHUPS MINI-GAME               -->
+        <!-- ============================================== -->
+        <section id="flappy-view" class="view-section hidden space-y-4">
+            <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button data-nav="dashboard" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition flex items-center gap-1.5">
+                        ← Menu
+                    </button>
+                    <span class="text-sm font-bold text-white hidden sm:inline">🐥 Flappy Pompes Arcade</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="window.flappyPushupsGame.flap('pushup')" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-amber-300 border border-slate-700">
+                        ⚡ Battement Test (Espace)
+                    </button>
+                    <span id="flappy-camera-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                        🟡 Connexion caméra...
+                    </span>
+                    <button id="stop-flappy-btn" class="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white shadow transition">
+                        Arrêter
+                    </button>
+                </div>
+            </div>
+
+            <div class="camera-container aspect-[16/9] max-h-[72vh] relative">
+                <canvas id="flappy-canvas" class="cursor-pointer"></canvas>
+                <div class="absolute bottom-4 right-4 w-40 aspect-[4/3] rounded-xl overflow-hidden border-2 border-cyan-500/60 shadow-xl z-20 bg-black/60 pointer-events-none">
+                    <video id="flappy-video" class="w-full h-full object-cover transform scale-x-[-1]" autoplay playsinline muted></video>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 7: NINJA STRIKE (SPORT LUDIQUE SLASH)     -->
+        <!-- ============================================== -->
+        <section id="ninja-view" class="view-section hidden space-y-4">
+            <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button data-nav="dashboard" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition flex items-center gap-1.5">
+                        ← Menu
+                    </button>
+                    <span class="text-sm font-bold text-white hidden sm:inline">🍉 Ninja Strike Slash Vision</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="ninja-camera-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                        🟡 Connexion caméra...
+                    </span>
+                    <button id="stop-ninja-btn" class="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white shadow transition">
+                        Terminer
+                    </button>
+                </div>
+            </div>
+
+            <div class="camera-container aspect-[16/9] max-h-[72vh] relative">
+                <!-- Live Video as mirrored background -->
+                <video id="ninja-video" class="w-full h-full object-cover transform scale-x-[-1]" autoplay playsinline muted></video>
+                <canvas id="ninja-canvas" class="cursor-crosshair"></canvas>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 8: BOUTIQUE OFFICIELLE AJI FIT           -->
+        <!-- ============================================== -->
+        <section id="shop-view" class="view-section hidden space-y-6">
+            <!-- Shop Header Aji Fit -->
+            <div class="glass-panel p-6 rounded-3xl border border-indigo-500/20 overflow-hidden relative shadow-xl" style="background: linear-gradient(135deg, #0a0f1e 0%, #1a1035 50%, #0d1117 100%);">
+                <!-- Decorative background -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background: radial-gradient(ellipse at 80% 50%, #6366f1 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, #06b6d4 0%, transparent 50%);"></div>
+
+                <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <button data-nav="dashboard" class="px-3 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs font-bold text-slate-300 transition flex items-center gap-1 border border-slate-700/60">
+                                ← Accueil
+                            </button>
+
+                            <!-- Aji Fit Brand Logo -->
+                            <div class="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1 rounded-xl">
+                                <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-xs font-black text-white shadow">A</div>
+                                <div class="text-sm font-black tracking-wider">
+                                    <span class="text-cyan-400">Aji</span><span class="text-white">Fit</span>
+                                    <span class="text-[9px] ml-1 font-normal text-slate-400 uppercase tracking-widest">Official Store</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="text-3xl font-black text-white tracking-tight">🛍️ Boutique Officielle Aji Fit</h2>
+                        <p class="text-sm text-slate-400 mt-1">Équipements de boxe pro, musculation, nutrition & récupération — Livraison 24h.</p>
+                    </div>
+
+                    <div class="flex items-center gap-3 shrink-0">
+                        <button class="open-cart-btn relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-cyan-500/25 transition flex items-center gap-2 active:scale-95">
+                            <span>🛒 Mon Panier</span>
+                            <span class="cart-count-badge hidden px-2 py-0.5 rounded-full text-[10px] font-black bg-black text-cyan-300">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls: Category Filter Pills & Search Input -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none text-xs">
+                    <button data-shop-filter="all" class="px-3.5 py-2 rounded-xl bg-cyan-500 text-black font-black transition whitespace-nowrap">
+                        Tous les articles
+                    </button>
+                    <button data-shop-filter="boxing" class="px-3.5 py-2 rounded-xl bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap">
+                        🥊 Boxe & Combat
+                    </button>
+                    <button data-shop-filter="fitness" class="px-3.5 py-2 rounded-xl bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap">
+                        🏋️ Musculation & Force
+                    </button>
+                    <button data-shop-filter="nutrition" class="px-3.5 py-2 rounded-xl bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap">
+                        🥤 Nutrition & Énergie
+                    </button>
+                    <button data-shop-filter="recovery" class="px-3.5 py-2 rounded-xl bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap">
+                        ⚡ Récupération
+                    </button>
+                </div>
+
+                <div class="relative min-w-[240px]">
+                    <input type="text" id="shop-search-input" placeholder="Rechercher un équipement Aji Fit..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+                    <span class="absolute left-3 top-2.5 text-xs text-slate-500">🔍</span>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="shop-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </section>
+
+    </main>
+
+    <!-- Weight Entry Modal -->
+    <div id="weight-entry-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-slate-700 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                <h3 class="text-xl font-black text-white flex items-center gap-2">
+                    <span>⚖️ Enregistrer une pesée</span>
+                </h3>
+                <button id="close-weight-modal-btn" class="text-slate-400 hover:text-white text-lg p-1">
+                    ✕
+                </button>
+            </div>
+
+            <form id="weight-entry-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                        Date de la pesée
+                    </label>
+                    <input type="date" id="weight-input-date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                        Poids pesé (kg)
+                    </label>
+                    <input type="number" step="0.1" min="30" max="250" id="weight-input-val" required placeholder="Ex: 79.5" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-base font-bold focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                        Objectif cible (kg)
+                    </label>
+                    <input type="number" step="0.1" min="30" max="250" id="weight-input-goal" placeholder="Ex: 75.0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-cyan-400 text-sm font-bold focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="document.getElementById('weight-entry-modal').classList.add('hidden')" class="w-1/2 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition">
+                        Annuler
+                    </button>
+                    <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/25 transition">
+                        Valider & Sauvegarder
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Slide-over Cart Backdrop & Drawer -->
+    <div id="cart-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-slate-900 border-l border-slate-800 z-50 p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 shadow-2xl">
+        <div>
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🛒</span>
+                    <h3 class="text-xl font-black text-white">Mon Panier Sport</h3>
+                </div>
+                <button id="close-cart-btn" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold transition">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Cart Items List Container -->
+            <div id="cart-items-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- Cart Footer -->
+        <div class="pt-4 border-t border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-sm">
+                <span class="text-slate-400">Frais de livraison</span>
+                <span class="text-emerald-400 font-bold">GRATUIT</span>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-base font-bold text-white">Total TTC :</span>
+                <span id="cart-drawer-total" class="text-3xl font-black text-neon-cyan font-teko">0.00 €</span>
+            </div>
+            <button id="checkout-cart-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-2">
+                <span>💳 Commander & Valider le Panier</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Session Complete Modal (Résumé & Record) -->
+    <div id="summary-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-lg w-full p-6 lg:p-8 rounded-3xl border border-slate-700 shadow-2xl relative animate-pulse-glow">
+            <div id="modal-record-badge" class="mb-4 inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-red-500 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/30 hidden">
+                🔥 NOUVEAU RECORD PERSONNEL !
+            </div>
+
+            <h3 id="modal-title" class="text-2xl lg:text-3xl font-black text-white mb-2">Séance Terminée</h3>
+            <p id="modal-message" class="text-slate-300 text-sm mb-6 leading-relaxed"></p>
+
+            <div id="modal-stats-grid" class="grid grid-cols-2 gap-3 mb-6"></div>
+
+            <button id="modal-close-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/25 transition">
+                Enregistrer & Retour à l'accueil
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+    <script src="js/audio.js?v=8"></script>
+    <script src="js/speech.js?v=8"></script>
+    <script src="js/pose-detector.js?v=8"></script>
+    <script src="js/boxing.js?v=8"></script>
+    <script src="js/boxing-vr.js?v=8"></script>
+    <script src="js/pushups.js?v=8"></script>
+    <script src="js/squats.js?v=8"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+    <script src="js/audio.js?v=9"></script>
+    <script src="js/speech.js?v=9"></script>
+    <script src="js/pose-detector.js?v=9"></script>
+    <script src="js/boxing.js?v=9"></script>
+    <script src="js/boxing-vr.js?v=9"></script>
+    <script src="js/pushups.js?v=9"></script>
+    <script src="js/squats.js?v=9"></script>
+    <script src="js/flappy-pushups.js?v=9"></script>
+    <script src="js/ninja-strike.js?v=9"></script>
+    <script src="js/weight-tracker.js?v=9"></script>
+    <script src="js/shop.js?v=9"></script>
+    <script src="js/app.js?v=9"></script>
+</body>
+</html>
